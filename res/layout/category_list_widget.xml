@@ -8,44 +8,38 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".HomePage" >
-
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:background="@drawable/categoryborder"
-        android:gravity="center"
-        android:text="Catergories"
-        android:textStyle="bold"
-        android:textColor="#FFFFFF"
-        android:textSize="40dp"/>
-
-    <ExpandableListView
-        android:id="@+id/groceryExpandableList"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView1"
-        android:layout_alignParentBottom="true"
-        android:layout_below="@+id/textView1" />
-
-    <Button
+    
+	<TextView 
+	    android:id="@+id/categoryParent"
+	    android:layout_width="match_parent"
+	    android:layout_height="50dp"
+	    android:layout_alignParentLeft="true"
+	    android:background="@drawable/categorylistborder"
+	    android:gravity="center"
+	    android:text="Grocery List 1"
+	    android:textColor="#FFFFFF"
+	    android:textAppearance="?android:attr/textAppearanceMedium"
+	    android:minHeight="15dp"
+	    android:textStyle="bold"
+	    android:textSize="30sp" />
+	
+	<Button
         android:id="@+id/buttonAddCategory"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textView1"
-        android:layout_alignBottom="@+id/textView1"
-        android:layout_alignRight="@+id/textView1"
+        android:layout_alignBaseline="@+id/categoryParent"
+        android:layout_alignBottom="@+id/categoryParent"
+        android:layout_alignRight="@+id/categoryParent"
         android:layout_marginRight="16dp"
         android:background="@drawable/circle"
         android:minHeight="30dp"
         android:minWidth="30dp"
-        android:onClick="onCategoryAddClicked"
+        android:onClick="onCategoryItemAddClicked"
         android:text="+"
         android:textColor="#FFFFFF"
         android:textSize="20dp"
         android:textStyle="bold" />
-
+	
 </RelativeLayout>
+

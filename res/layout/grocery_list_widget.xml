@@ -1,0 +1,41 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="top"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".HomePage" >
+    
+	<TextView 
+	    android:id="@+id/categoryChild"
+	    android:layout_width="match_parent"
+	    android:layout_height="50dp"
+	    android:layout_alignParentLeft="true"
+	    android:background="@drawable/grocery_list_border"
+	    android:gravity="center"
+	    android:text="Grocery List 1"
+	    android:textColor="#000000"
+	    android:textAppearance="?android:attr/textAppearanceMedium"
+	    android:minHeight="15dp"
+	    android:textSize="25sp" />
+
+	<Button
+	    android:id="@+id/buttonAddCategory"
+	    style="?android:attr/buttonStyleSmall"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignBaseline="@+id/categoryChild"
+	    android:layout_alignBottom="@+id/categoryChild"
+	    android:layout_alignRight="@+id/categoryChild"
+	    android:minHeight="20dp"
+	    android:minWidth="20dp"
+	    android:onClick="onGroceryListItemDeleteClicked"
+	    android:text="X"
+	    android:textColor="#000000"
+	    android:textSize="10dp"
+	    android:textStyle="bold" />
+	
+</RelativeLayout>
