@@ -59,7 +59,7 @@ public class HomePage extends Activity
 	    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
 	        public void onClick(DialogInterface dialog, int whichButton) {
 	            String value = input.getText().toString(); 
-	            addCategory(value);
+	            listAdapter.AddGroup(value);
 	        }
 	    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 	        public void onClick(DialogInterface dialog, int whichButton) {
@@ -95,7 +95,8 @@ public class HomePage extends Activity
 		     	            Log.w("myApp", String.valueOf(parentIndex));
 		     	            if(parentIndex >= 0)
 		     	            {
-		     	            	addGroceryList(value, parentIndex);
+		     	            	listAdapter.AddChild(parentIndex, value);
+		     	            	groceryListsView.expandGroup(parentIndex);
 		     	            }      
 		                    break;
 		                }
@@ -111,33 +112,46 @@ public class HomePage extends Activity
 	
 	public void onGroceryListItemDeleteClicked(View v)
 	{
-		
+		ViewGroup row = (ViewGroup) v.getParent();
+        for (int itemPos = 0; itemPos < row.getChildCount(); itemPos++) {
+            View view = row.getChildAt(itemPos);          
+            if (view instanceof TextView) 
+            {
+            	String nameOfView = ((TextView)view).getText().toString(); //Found it!
+            	Log.w("TextView to delete:", nameOfView);
+            	
+                int parentIndex = listAdapter.getParentByChildText(nameOfView);
+                if(parentIndex >= 0)
+         	    {
+         	    	int childIndex = listAdapter.GetChildIndexByText(nameOfView);
+         	    	listAdapter.removeChild(parentIndex, childIndex);
+         	    	Log.w("TextView DELETED:", nameOfView);
+         	    }      	
+                break;
+            }
+        } 	    
 	}
 	
-	public void addCategory(String name)
-	{		
-	    parents.add(name);
-	    	    	    
-	    listAdapter.notifyDataSetChanged();
-		listAdapter.notifyDataSetInvalidated();
-	}
-	
-	public void addGroceryList(String name, int index)
+	public void onCategoryItemDeleteClicked(View v)
 	{
-		if(children.size() <= index)
-		{
-			ArrayList<String> tempList = new ArrayList<String>();
-			tempList.add(name);
-			children.add(tempList);
-		}
-		else
-		{
-			children.get(index).add(name);
-		}
-		
-	    listAdapter.notifyDataSetChanged();
-	    listAdapter.notifyDataSetInvalidated();
-		
-	}
+		String nameOfView = "";
+        ViewGroup row = (ViewGroup) v.getParent();
+        for (int itemPos = 0; itemPos < row.getChildCount(); itemPos++) {
+            View view = row.getChildAt(itemPos);
+            if (view instanceof TextView) 
+            {
+            	nameOfView = ((TextView)view).getText().toString(); //Found it!
+            	Log.w("TextView to delete:", nameOfView);
+            	
+                int parentIndex = listAdapter.getParentByText(nameOfView);
 
+ 	            if(parentIndex >= 0)
+ 	            {
+ 	            	listAdapter.RemoveGroup(nameOfView);
+ 	            	Log.w("TextView DELETED:", nameOfView);
+ 	            }      
+                break;
+            }
+        }
+	}
 }

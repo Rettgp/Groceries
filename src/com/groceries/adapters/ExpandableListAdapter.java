@@ -97,6 +97,21 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
     	}
     	return -1;
     }
+    
+    public int GetChildIndexByText(String text)
+    {
+    	for(int i = 0; i < children.size(); ++i)
+    	{
+    		for(int j = 0; j < children.get(i).size(); ++j)
+        	{
+    			if(children.get(i).get(j).equals(text))
+    			{
+    				return j;
+    			}
+        	}
+    	}   	
+    	return -1;
+    }
 
     public boolean hasStableIds() 
     {
@@ -109,8 +124,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
     	View v = null;
         if( view != null )
         {
-            v = view;
-            
+            v = view;    
         }
         else
             v = inflater.inflate(R.layout.category_list_widget, viewGroup, false); 
@@ -129,11 +143,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
         if( view != null )
             v = view;
         else
-            v = inflater.inflate(R.layout.grocery_list_widget, viewGroup, false); 
+            v = inflater.inflate(R.layout.grocery_list_widget, null, true); 
         TextView child = (TextView)v.findViewById(R.id.categoryChild);
         if( child != null )
         {
-        	child.setText(((TextView)(getChild(parentPosition, childPosition))).getText());
+        	child.setText(((String)getChild(parentPosition, childPosition)));
         }
        
         return v;
@@ -142,6 +156,52 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
     public boolean isChildSelectable(int i, int i1) 
     {
         return true;
+    }
+    
+    public void removeChild(int groupPosition, int childPosition) 
+    {
+        if (getChildrenCount(groupPosition)>0 && getChildrenCount(groupPosition)-1 >= childPosition )
+        {
+        	children.get(groupPosition).remove(childPosition);
+        	notifyDataSetChanged();
+        }
+
+    }
+    
+    public void AddChild(int groupPosition, String child) 
+    {
+        if (getGroupCount() > 0 && getGroupCount()-1 >= groupPosition )
+        {    
+        	if(children.size() <= groupPosition)
+    		{
+        		ArrayList<String> tempList = new ArrayList<String>();
+    			tempList.add(child);
+    			children.add(tempList);	            
+    		}
+        	else
+        	{
+        		children.get(groupPosition).add(child);
+        	}
+        	
+        	notifyDataSetChanged();
+        }
+    }
+    
+    public void AddGroup(String name)
+    {
+    	parents.add(name);
+    	
+    	notifyDataSetChanged();
+    }
+    
+    public void RemoveGroup(String name)
+    {
+    	int index = parents.indexOf(name);
+    	
+    	parents.remove(index);
+    	children.remove(index);
+    	
+    	notifyDataSetChanged();
     }
     
 }

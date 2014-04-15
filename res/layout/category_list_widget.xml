@@ -12,7 +12,7 @@
 	<TextView 
 	    android:id="@+id/categoryParent"
 	    android:layout_width="match_parent"
-	    android:layout_height="50dp"
+	    android:layout_height="60dp"
 	    android:layout_alignParentLeft="true"
 	    android:background="@drawable/categorylistborder"
 	    android:gravity="center"
@@ -22,24 +22,40 @@
 	    android:minHeight="15dp"
 	    android:textStyle="bold"
 	    android:textSize="30sp" />
-	
+
 	<Button
-        android:id="@+id/buttonAddCategory"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/categoryParent"
-        android:layout_alignBottom="@+id/categoryParent"
-        android:layout_alignRight="@+id/categoryParent"
-        android:layout_marginRight="16dp"
-        android:background="@drawable/circle"
-        android:minHeight="30dp"
-        android:minWidth="30dp"
-        android:onClick="onCategoryItemAddClicked"
-        android:text="+"
-        android:textColor="#FFFFFF"
-        android:textSize="20dp"
-        android:textStyle="bold" />
+	    android:id="@+id/buttonAddCategory"
+	    style="?android:attr/buttonStyleSmall"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignBottom="@+id/categoryParent"
+	    android:layout_alignRight="@+id/categoryParent"
+	    android:background="@drawable/circle"
+	    android:focusable="false"
+	    android:minHeight="30dp"
+	    android:minWidth="50dp"
+	    android:onClick="onCategoryItemAddClicked"
+	    android:text="+"
+	    android:textColor="#FFFFFF"
+	    android:textSize="40dp"
+	    android:textStyle="bold" />
+
+	<Button
+	    android:id="@+id/buttonRemoveCategory"
+	    style="?android:attr/buttonStyleSmall"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignBottom="@+id/categoryParent"
+	    android:layout_alignLeft="@+id/categoryParent"
+	    android:layout_alignTop="@+id/buttonAddCategory"
+	    android:layout_marginLeft="18dp"
+	    android:minHeight="20dp"
+	    android:minWidth="45dp"
+	    android:onClick="onCategoryItemDeleteClicked"
+	    android:text="X"
+	    android:textColor="#000000"
+	    android:textSize="20dp"
+	    android:textStyle="bold" />
 	
 </RelativeLayout>
 

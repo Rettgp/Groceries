@@ -12,7 +12,7 @@
     <TextView
         android:id="@+id/textView1"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="70dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:background="@drawable/categoryborder"
@@ -38,14 +38,13 @@
         android:layout_alignBaseline="@+id/textView1"
         android:layout_alignBottom="@+id/textView1"
         android:layout_alignRight="@+id/textView1"
-        android:layout_marginRight="16dp"
         android:background="@drawable/circle"
         android:minHeight="30dp"
-        android:minWidth="30dp"
+        android:minWidth="50dp"
         android:onClick="onCategoryAddClicked"
         android:text="+"
         android:textColor="#FFFFFF"
-        android:textSize="20dp"
+        android:textSize="40dp"
         android:textStyle="bold" />
 
 </RelativeLayout>

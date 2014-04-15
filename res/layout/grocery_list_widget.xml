@@ -12,7 +12,7 @@
 	<TextView 
 	    android:id="@+id/categoryChild"
 	    android:layout_width="match_parent"
-	    android:layout_height="50dp"
+	    android:layout_height="55dp"
 	    android:layout_alignParentLeft="true"
 	    android:background="@drawable/grocery_list_border"
 	    android:gravity="center"
@@ -27,15 +27,15 @@
 	    style="?android:attr/buttonStyleSmall"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
-	    android:layout_alignBaseline="@+id/categoryChild"
 	    android:layout_alignBottom="@+id/categoryChild"
 	    android:layout_alignRight="@+id/categoryChild"
+	    android:layout_alignTop="@+id/categoryChild"
 	    android:minHeight="20dp"
-	    android:minWidth="20dp"
+	    android:minWidth="50dp"
 	    android:onClick="onGroceryListItemDeleteClicked"
 	    android:text="X"
 	    android:textColor="#000000"
-	    android:textSize="10dp"
+	    android:textSize="30dp"
 	    android:textStyle="bold" />
 	
 </RelativeLayout>
