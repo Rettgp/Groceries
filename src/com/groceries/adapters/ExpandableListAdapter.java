@@ -42,7 +42,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
 	public int getChildrenCount(int parentPosition) 
     {
         int size =0;
-        if(parents.get(parentPosition) != null)
+        if(parents.get(parentPosition) != null && children.size() >= parentPosition)
         {
         	size = children.get(parentPosition).size();
         }
@@ -165,7 +165,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
         	children.get(groupPosition).remove(childPosition);
         	notifyDataSetChanged();
         }
-
     }
     
     public void AddChild(int groupPosition, String child) 
@@ -199,7 +198,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
     	int index = parents.indexOf(name);
     	
     	parents.remove(index);
-    	children.remove(index);
+    	if(children.size() > index)
+    	{
+    		children.remove(index);
+    	}
     	
     	notifyDataSetChanged();
     }

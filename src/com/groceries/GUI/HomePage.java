@@ -1,35 +1,31 @@
 package com.groceries.GUI;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.graphics.Color;
-import android.graphics.Typeface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
 import com.example.groceries.R;
 import com.groceries.adapters.ExpandableListAdapter;
-import com.groceries.adapters.ExpandableListParent;
 
-public class HomePage extends Activity
+public class HomePage extends Activity 
 {
 	ExpandableListView groceryListsView;
 	ExpandableListAdapter listAdapter;
 	ArrayList<String> parents = new ArrayList<String>();
 	ArrayList<ArrayList<String>> children = new ArrayList<ArrayList<String>>();
+	final HomePage CONTEXT = this;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -38,7 +34,7 @@ public class HomePage extends Activity
 		setContentView(R.layout.activity_home_page);
 		groceryListsView = (ExpandableListView) findViewById(R.id.groceryExpandableList);
 		listAdapter = new ExpandableListAdapter(this, parents, children);
-		groceryListsView.setAdapter(listAdapter);	
+		groceryListsView.setAdapter(listAdapter);		
 	}
 
 	@Override
@@ -153,5 +149,13 @@ public class HomePage extends Activity
                 break;
             }
         }
+	}
+	
+	public void onGroceryListStart(View v)
+	{
+		String nameOfView = ((TextView)v).getText().toString();
+    	Intent i = new Intent(CONTEXT, GroceryItems.class);
+    	i.putExtra("nameOfList", nameOfView);
+    	startActivity(i); 
 	}
 }

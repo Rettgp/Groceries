@@ -10,31 +10,30 @@
     tools:context=".HomePage" >
     
 	<TextView 
-	    android:id="@+id/categoryChild"
+	    android:id="@+id/groceryItem"
 	    android:layout_width="match_parent"
 	    android:layout_height="55dp"
 	    android:layout_alignParentLeft="true"
 	    android:background="@drawable/grocery_list_border"
 	    android:gravity="center"
-	    android:onClick="onGroceryListStart"
+	    android:onClick="onItemSelected"
 	    android:clickable="true"
-	    android:text="Grocery List 1"
+	    android:text="Grocery Item 1"
 	    android:textColor="#000000"
 	    android:textAppearance="?android:attr/textAppearanceMedium"
 	    android:minHeight="15dp"
 	    android:textSize="25sp" />
 
 	<Button
-	    android:id="@+id/buttonAddCategory"
+	    android:id="@+id/buttonDeleteItem"
 	    style="?android:attr/buttonStyleSmall"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
-	    android:layout_alignBottom="@+id/categoryChild"
-	    android:layout_alignRight="@+id/categoryChild"
-	    android:layout_alignTop="@+id/categoryChild"
+	    android:layout_alignParentTop="true"
+	    android:layout_alignRight="@+id/groceryItem"
 	    android:minHeight="20dp"
 	    android:minWidth="50dp"
-	    android:onClick="onGroceryListItemDeleteClicked"
+	    android:onClick="onGroceryItemDeleteClicked"
 	    android:text="X"
 	    android:textColor="#000000"
 	    android:textSize="30dp"
