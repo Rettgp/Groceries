@@ -42,7 +42,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
 	public int getChildrenCount(int parentPosition) 
     {
         int size =0;
-        if(parents.get(parentPosition) != null && children.size() >= parentPosition)
+        if(parents.get(parentPosition) != null && children.size() > parentPosition)
         {
         	size = children.get(parentPosition).size();
         }

@@ -35,6 +35,7 @@
 	    android:minHeight="20dp"
 	    android:minWidth="50dp"
 	    android:onClick="onGroceryListItemDeleteClicked"
+	    android:focusable="false"
 	    android:text="X"
 	    android:textColor="#000000"
 	    android:textSize="30dp"
