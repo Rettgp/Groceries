@@ -169,27 +169,15 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
     
     public void AddChild(int groupPosition, String child) 
     {
-        if (getGroupCount() > 0 && getGroupCount()-1 >= groupPosition )
-        {    
-        	if(children.size() <= groupPosition)
-    		{
-        		ArrayList<String> tempList = new ArrayList<String>();
-    			tempList.add(child);
-    			children.add(tempList);	            
-    		}
-        	else
-        	{
-        		children.get(groupPosition).add(child);
-        	}
-        	
-        	notifyDataSetChanged();
-        }
+        
+    	children.get(groupPosition).add(child);
+        notifyDataSetChanged();
     }
     
     public void AddGroup(String name)
     {
     	parents.add(name);
-    	
+    	children.add(new ArrayList<String>());
     	notifyDataSetChanged();
     }
     

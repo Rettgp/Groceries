@@ -8,7 +8,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -32,6 +33,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -45,10 +47,10 @@ import com.groceries.adapters.ExpandableListAdapter;
 
 public class HomePage extends Activity 
 {
-	ExpandableListView groceryListsView;
-	ExpandableListAdapter listAdapter;
-	ArrayList<String> parents = new ArrayList<String>();
-	ArrayList<ArrayList<String>> children = new ArrayList<ArrayList<String>>();
+	 ExpandableListView groceryListsView;
+	 ExpandableListAdapter listAdapter;
+	 ArrayList<String> parents = new ArrayList<String>();
+	 ArrayList<ArrayList<String>> children = new ArrayList<ArrayList<String>>();
 	final HomePage CONTEXT = this;
 	String currentID = "";
 	static boolean loadedCategory = false;
@@ -66,9 +68,8 @@ public class HomePage extends Activity
 		groceryListsView = (ExpandableListView) findViewById(R.id.groceryExpandableList);
 		listAdapter = new ExpandableListAdapter(this, parents, children);
 		groceryListsView.setAdapter(listAdapter);		
-
-		new RequestTask().execute("http://whispering-springs-5771.herokuapp.com/categories.json");
 		
+		new RequestTask().execute("http://whispering-springs-5771.herokuapp.com/categories.json");
 
 	}
 
@@ -179,7 +180,6 @@ public class HomePage extends Activity
          	    	// Send DELETE request to remove grocery list from server
          	    	sendGroceryListDeleteRequest(childID, parentID);
          	    	// Remove the grocery list from the transient map
-         	    	groceryListMap.remove(nameOfView);
          	    	Log.w("TextView DELETED:", nameOfView);
          	    }      	
                 break;
@@ -207,7 +207,6 @@ public class HomePage extends Activity
  	            	// Send DELETE request to remove category from server
  	            	sendDeleteRequest(categoryMap.get(nameOfView));
  	            	// Remove category from transient map
- 	            	categoryMap.remove(nameOfView);
  	            	Log.w("TextView DELETED:", nameOfView);
  	            }      
                 break;
@@ -218,8 +217,13 @@ public class HomePage extends Activity
 	public void onGroceryListStart(View v)
 	{
 		String nameOfView = ((TextView)v).getText().toString();
+		String parentText = (String)listAdapter.getGroup(listAdapter.getParentByChildText(nameOfView));
+		String parentID = categoryMap.get(parentText);
+		String childID = groceryListMap.get(nameOfView);
     	Intent i = new Intent(CONTEXT, GroceryItems.class);
     	i.putExtra("nameOfList", nameOfView);
+    	i.putExtra("id", childID);
+    	i.putExtra("parentID", parentID);
     	startActivity(i); 
 	}
 	
@@ -233,7 +237,10 @@ public class HomePage extends Activity
 			{
 				JSONObject subObj = jsonArray.getJSONObject(i);
 				String categoryName = (String)subObj.get("name");
-				listAdapter.AddGroup(categoryName);
+				if(!categoryMap.containsKey(categoryName))
+				{
+					listAdapter.AddGroup(categoryName);
+				}
 			}
 		} catch (JSONException e)
 		{
@@ -245,6 +252,7 @@ public class HomePage extends Activity
 	// Put all grocery lists from GET response into the view
 	public void loadGroceryLists(String response)
 	{
+		ArrayList<String> current = new ArrayList<String>();
 		try
 		{
 			JSONArray jsonArray = new JSONArray(response);
@@ -252,14 +260,18 @@ public class HomePage extends Activity
 			{
 				JSONObject subObj = jsonArray.getJSONObject(i);
 				String listName = (String)subObj.get("name");
-				String categoryID = String.valueOf(subObj.get("category_id"));
-				
-				String categoryName = findCategoryName(categoryID);
-				
-				int parentPos = listAdapter.getParentByText(categoryName);
-				Log.w("View: ", "Added: " + listName + " : Pos:" + parentPos);
-				listAdapter.AddChild(parentPos, listName);
-				groceryListsView.expandGroup(parentPos);
+				current.add(listName);
+				if(!groceryListMap.containsKey(listName))
+				{
+					String categoryID = String.valueOf(subObj.get("category_id"));
+					
+					String categoryName = findCategoryName(categoryID);
+					
+					int parentPos = listAdapter.getParentByText(categoryName);
+					Log.w("View: ", "Added: " + listName + " : Pos:" + parentPos);
+					listAdapter.AddChild(parentPos, listName);
+					groceryListsView.expandGroup(parentPos);
+				}
 			}
 		} catch (JSONException e)
 		{
@@ -282,7 +294,6 @@ public class HomePage extends Activity
 	// Add the category to the map from POST reponse
 	public void updateCategoryMap(String json)
 	{
-		categoryMap.clear();
 		try
 		{
 			JSONArray jsonArray = new JSONArray(json);
@@ -290,9 +301,12 @@ public class HomePage extends Activity
 			{
 				JSONObject subObj = jsonArray.getJSONObject(i);
 				String categoryName = (String)subObj.get("name");
-				String id = String.valueOf((Integer)subObj.get("id"));
-				categoryMap.put(categoryName, id);
-				Log.w("Map: ", "Added: " + categoryName + " : " + id);
+				if(!categoryMap.containsKey(categoryName))
+				{
+					String id = String.valueOf((Integer)subObj.get("id"));
+					categoryMap.put(categoryName, id);
+					Log.w("Map: ", "Added: " + categoryName + " : " + id);
+				}
 			}
 		}
 		catch(Exception ex)
@@ -304,7 +318,6 @@ public class HomePage extends Activity
 	// Add the grocery list to the map from POST reponse
 	public void updateGroceryListMap(String json)
 	{
-		groceryListMap.clear();
 		try
 		{
 			JSONArray jsonArray = new JSONArray(json);
@@ -312,9 +325,12 @@ public class HomePage extends Activity
 			{
 				JSONObject subObj = jsonArray.getJSONObject(i);
 				String listName = (String)subObj.get("name");
-				String id = String.valueOf((Integer)subObj.get("id"));
-				groceryListMap.put(listName, id);
-				Log.w("Map: ", "Added: " + listName + " : " + id);
+				if(!groceryListMap.containsKey(listName))
+				{
+					String id = String.valueOf((Integer)subObj.get("id"));
+					groceryListMap.put(listName, id);
+					Log.w("Map: ", "Added: " + listName + " : " + id);
+				}
 			}
 		}
 		catch(Exception ex)
@@ -338,13 +354,30 @@ public class HomePage extends Activity
         return null;
 	}
 	
+	public String findGroceryListName(String id)
+	{
+		Iterator it = groceryListMap.entrySet().iterator();
+        while (it.hasNext()) 
+        {
+            Map.Entry pairs = (Map.Entry)it.next();
+            if(((String)pairs.getValue()).equals(id))
+            {
+            	return (String)pairs.getKey();
+            }
+        }
+        
+        return null;
+	}
+	
 	public void sendDeleteRequest(String id)
 	{
+		categoryMap.remove(findCategoryName(id));
 		new DeleteTask().execute("http://whispering-springs-5771.herokuapp.com/categories/" + id + ".json");   
 	}
 	
 	public void sendGroceryListDeleteRequest(String id, String parentID)
 	{
+		groceryListMap.remove(findGroceryListName(id));
 		new DeleteTask().execute("http://whispering-springs-5771.herokuapp.com/categories/" + 
 				parentID + "/grocery_lists/" + id + ".json");   
 	}
@@ -388,34 +421,60 @@ public class HomePage extends Activity
 	    @Override
 	    protected void onPostExecute(String result) {
 	        super.onPostExecute(result);
-	        
-	        // If category has not been loaded before load and update map
-	        if(!loadedCategory)
+		    loadCategories(result);
+	        updateCategoryMap(result);	
+	        // Iterate through categories getting the grocery lists for each one
+	    	Iterator it = categoryMap.entrySet().iterator();
+	        while (it.hasNext()) 
 	        {
-		        loadCategories(result);
-	        	updateCategoryMap(result);
-	        	loadedCategory = true;
-	        	
-	        	// Iterate through categories getting the grocery lists for each one
-	    		Iterator it = categoryMap.entrySet().iterator();
-	            while (it.hasNext()) 
-	            {
-	                Map.Entry pairs = (Map.Entry)it.next();
-	                new RequestTask().execute("http://whispering-springs-5771.herokuapp.com/categories/" +
-	                		pairs.getValue() + "/grocery_lists.json");
-	            }
+	        	Map.Entry pairs = (Map.Entry)it.next();
+	            new RequestListTask().execute("http://whispering-springs-5771.herokuapp.com/categories/" +
+	            	pairs.getValue() + "/grocery_lists.json");
 	        }
-	        // If grocery list has not been loaded before load and update map
-	        else if(loadGroceryList)
-	        {
-	        	if(!loadedGroceryList)
-	        	{
-	        		loadGroceryLists(result);
-	        	}
-		        updateGroceryListMap(result);
-	        	loadedGroceryList = true;
-	        	loadGroceryList = false;
-	        }
+	    }
+	}
+	
+	class RequestListTask extends AsyncTask<String, String, String>{
+
+	    @Override
+	    protected String doInBackground(String... uri) {
+	    	DefaultHttpClient httpclient = new DefaultHttpClient(new BasicHttpParams());
+		    HttpGet httpget = new HttpGet(uri[0]);
+		    // Depends on your web service
+		    httpget.setHeader("Content-type", "application/json");
+
+		    InputStream inputStream = null;
+		    String result = null;
+		    try {
+		        HttpResponse response = httpclient.execute(httpget);   
+		        Log.w("Connection: ", "Connected");
+		        HttpEntity entity = response.getEntity();
+		        
+		        inputStream = entity.getContent();
+		        // json is UTF-8 by default
+		        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"), 8);
+		        StringBuilder sb = new StringBuilder();
+
+		        String line = null;
+		        while ((line = reader.readLine()) != null)
+		        {
+		            sb.append(line + "\n");
+		        }
+		        result = sb.toString();
+		    } catch (Exception e) { 
+		    	Log.w("Connection: ", "Disconnected");
+		    }
+		    finally {
+		        try{if(inputStream != null)inputStream.close();}catch(Exception squish){}
+		    }
+			return result; 
+	    }
+
+	    @Override
+	    protected void onPostExecute(String result) {
+	        super.onPostExecute(result);
+	        loadGroceryLists(result);
+		    updateGroceryListMap(result);
 	    }
 	}
 	
@@ -454,25 +513,6 @@ public class HomePage extends Activity
 	    @Override
 	    protected void onPostExecute(String result) {
 	        super.onPostExecute(result);
-	        
-	        // If we are posting a grocery list then send a request to update the view
-	        if(postList)
-	        {
-	        	Iterator it = categoryMap.entrySet().iterator();
-	            while (it.hasNext()) 
-	            {
-	                Map.Entry pairs = (Map.Entry)it.next();
-	                loadGroceryList = true;
-	                new RequestTask().execute("http://whispering-springs-5771.herokuapp.com/categories/" +
-	                		pairs.getValue() + "/grocery_lists.json");
-	            }
-	            postList = false;
-	        }
-	        // If we are posting a category then send a request to update the view
-	        else
-	        {
-	        	new RequestTask().execute("http://whispering-springs-5771.herokuapp.com/categories.json");
-	        }
 	    }
 	}
 	
