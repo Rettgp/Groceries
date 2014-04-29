@@ -233,14 +233,11 @@ public class HomePage extends Activity
 		try
 		{
 			JSONArray jsonArray = new JSONArray(response);
-			for(int i = 0; i < response.length(); ++i)
+			for(int i = 0; i < jsonArray.length(); ++i)
 			{
 				JSONObject subObj = jsonArray.getJSONObject(i);
 				String categoryName = (String)subObj.get("name");
-				if(!categoryMap.containsKey(categoryName))
-				{
 					listAdapter.AddGroup(categoryName);
-				}
 			}
 		} catch (JSONException e)
 		{
@@ -261,8 +258,6 @@ public class HomePage extends Activity
 				JSONObject subObj = jsonArray.getJSONObject(i);
 				String listName = (String)subObj.get("name");
 				current.add(listName);
-				if(!groceryListMap.containsKey(listName))
-				{
 					String categoryID = String.valueOf(subObj.get("category_id"));
 					
 					String categoryName = findCategoryName(categoryID);
@@ -271,7 +266,6 @@ public class HomePage extends Activity
 					Log.w("View: ", "Added: " + listName + " : Pos:" + parentPos);
 					listAdapter.AddChild(parentPos, listName);
 					groceryListsView.expandGroup(parentPos);
-				}
 			}
 		} catch (JSONException e)
 		{

@@ -75,7 +75,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
     {
     	for(int i = 0; i < getGroupCount(); ++i)
     	{
-    		for(int j = 0; j < getGroupCount(); ++j)
+    		for(int j = 0; j < children.get(i).size(); ++j)
         	{
     			if(((String)getChild(i, j)).equals(text))
         		{
